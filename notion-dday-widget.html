@@ -1,87 +1,134 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:400,700|Montserrat:900">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css?family=Lato:400,700|Montserrat:900"
+    />
     <title>Document</title>
     <style>
-      body{
-        background-color: white;
+      body {
+        background-color: #ffffff;
       }
       #timer {
         color: #eeeeee;
         text-align: center;
         text-transform: uppercase;
         font-family: 'Lato', sans-serif;
-        font-size: .7em;
+        font-size: 0.7em;
+        font-weight: 700;
         letter-spacing: 5px;
       }
       .numbers {
         font-family: 'Montserrat', sans-serif;
-        color:  #183059;
-        font-size: 4em;
+        color: #183059;
+        font-size: 4.2em;
         text-align: center;
+        line-height: 1.5em;
       }
-      .days, .hours, .minutes, .seconds {
+      .start,
+      .end,
+      .parts,
+      .units {
         display: inline-block;
         padding: 20px;
-        width: 100px;
+        width: 120px;
+        height: 90px;
         border-radius: 5px;
       }
-      .days {
-        background: #c07bf1;
+      .start {
+        background: #a63cf2;
       }
-      .hours {
+      .end {
         background: #f7be4d;
       }
-      .minutes {
+      .parts {
         background: #eeeeee;
         color: #183059;
       }
-      .seconds {
+      .units {
         background: #4f99ed;
       }
+      div.dday {
+        background: #ff3232;
+      }
     </style>
-</head>
-<body>
-<div id="timer">
-  <div class="days"> 
-    <div id="days" class="numbers "></div>days</div> 
-  <div class="hours"> 
-    <div id="hours" class="numbers"></div>hours</div> 
-  <div class="minutes"> 
-    <div id="minutes" class="numbers"></div>minutes</div> 
-  <div class="seconds"> 
-    <div id="seconds" class="numbers"></div>seconds</div> 
-  </div>
-</div>
-</body>
-<script>
-const year = new Date().getFullYear();
-const myDate = new Date('Jun 10, 2025 09:00:00');
+  </head>
+  <body>
+    <div id="timer">
+      <div class="start">
+        <div id="start" class="numbers"></div>
+        <div>start</div>
+      </div>
+      <div class="end">
+        <div id="end" class="numbers"></div>
+        <div>end</div>
+      </div>
+      <div class="parts">
+        <div id="parts" class="numbers"></div>
+        <div>parts</div>
+      </div>
+      <div class="units">
+        <div id="units" class="numbers"></div>
+        <div>units</div>
+      </div>
+    </div>
+  </body>
+  <script>
+    const year = new Date().getFullYear();
+    const startDate = new Date('2025-06-10 00:00');
+    const endDate = new Date('2025-12-05 00:00');
+    const partsDate = [
+      new Date('2025-07-19 00:00'),
+      new Date('2025-09-06 00:00'),
+      new Date('2025-10-25 00:00'),
+      new Date('2025-12-05 00:00'),
+    ];
+    const unitsDate = [
+      new Date('2025-07-09 00:00'),
+      new Date('2025-08-09 00:00'),
+      new Date('2025-09-09 00:00'),
+      new Date('2025-10-09 00:00'),
+      new Date('2025-11-09 00:00'),
+      new Date('2025-12-05 00:00'),
+    ];
 
-// countdown
-let timer = setInterval(function() {
+    function getPartofDate(today, list) {
+      for (let date of list) {
+        if (today <= date) return date;
+      }
+    }
+    function displayDate(name, date) {
+      const dateWrapper = document.getElementsByClassName(name)[0];
+      const dateEl = document.getElementById(name);
 
-  // get today's date
-  const today = new Date().getTime();
+      // isDday
+      if (date === 0) {
+        dateWrapper.classList.add('dday');
+        dateEl.innerHTML = 'D';
+      } else {
+        dateEl.innerHTML = date;
+      }
+    }
 
-  // get the difference
-  const diff = today - myDate;
+    // countdown
+    let timer = setInterval(function () {
+      // get today
+      const today = new Date();
 
-  // math
-  let days = Math.floor(diff / (1000 * 60 * 60 * 24));
-  let hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-  let minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-  let seconds = Math.floor((diff % (1000 * 60)) / 1000);
+      // calculate day count
+      const start = Math.floor((startDate - today) / (1000 * 60 * 60 * 24));
+      const end = Math.floor((endDate - today) / (1000 * 60 * 60 * 24));
+      const parts = Math.floor((getPartofDate(today, partsDate) - today) / (1000 * 60 * 60 * 24));
+      const units = Math.floor((getPartofDate(today, unitsDate) - today) / (1000 * 60 * 60 * 24));
 
-  // display
-  document.getElementById("days").innerHTML=days
-  document.getElementById("hours").innerHTML=hours
-  document.getElementById("minutes").innerHTML=minutes
-  document.getElementById("seconds").innerHTML=seconds
-
-}, 1000);
-</script>
+      // display
+      document.getElementById('start').innerHTML = '+' + start * -1;
+      displayDate('end', end);
+      displayDate('parts', parts);
+      displayDate('units', units);
+    }, 1000);
+  </script>
 </html>
