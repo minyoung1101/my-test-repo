@@ -77,7 +77,6 @@
     </div>
   </body>
   <script>
-    const year = new Date().getFullYear();
     const startDate = new Date('2025-06-10 00:00');
     const endDate = new Date('2025-12-05 00:00');
     const partsDate = [
@@ -119,13 +118,13 @@
       const today = new Date();
 
       // calculate day count
-      const start = Math.floor((startDate - today) / (1000 * 60 * 60 * 24));
-      const end = Math.floor((endDate - today) / (1000 * 60 * 60 * 24));
-      const parts = Math.floor((getPartofDate(today, partsDate) - today) / (1000 * 60 * 60 * 24));
-      const units = Math.floor((getPartofDate(today, unitsDate) - today) / (1000 * 60 * 60 * 24));
+      const start = Math.ceil((today - startDate) / (1000 * 60 * 60 * 24));
+      const end = Math.ceil((endDate - today) / (1000 * 60 * 60 * 24));
+      const parts = Math.ceil((getPartofDate(today, partsDate) - today) / (1000 * 60 * 60 * 24));
+      const units = Math.ceil((getPartofDate(today, unitsDate) - today) / (1000 * 60 * 60 * 24));
 
       // display
-      document.getElementById('start').innerHTML = '+' + start * -1;
+      document.getElementById('start').innerHTML = '+' + start;
       displayDate('end', end);
       displayDate('parts', parts);
       displayDate('units', units);
